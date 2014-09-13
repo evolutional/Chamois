@@ -1,0 +1,14 @@
+.DS_Store
+*.o
+*.o.d
+*.class
+*.a
+*~
+**/bin/**
+**/gen/**
+**/libs/**
+**/obj/**
+**/*.dir/**
+**/Debug/**
+**/Release/**
+**/ipch/**
