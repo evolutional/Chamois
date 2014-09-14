@@ -1,8 +1,20 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
+#include <vector>
+#include <map>
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace evolutional;
+
+
+template<> static std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString<std::pair<const int, int>>(const std::pair<const int, int>& t) {
+	std::wstringstream ss;
+	ss << "[" << t.first << ", " << t.second << "]";
+	return ss.str();
+}
+
+
 namespace ChamoisTest
 {		
 	TEST_CLASS(ChamoisTests)
@@ -152,6 +164,82 @@ namespace ChamoisTest
 			Chamois::Assert::ThatArray(A).Should().NotBe(B, L"arrays are not equal");
 		}
 
+		/*
+			Container tests
+		*/
+		TEST_METHOD(Chamois_Assert_Container_Vector_Equal)
+		{
+			std::vector<int> A = { 1, 2, 3, 4, 5 };
+			std::vector<int> B = { 1, 2, 3, 4, 5 };
+
+			Chamois::Assert::ThatContainer(A).Should().Be(B, L"vectors are equal.");
+		}
+
+		TEST_METHOD(Chamois_Assert_Container_Vector_NotEqual)
+		{
+			std::vector<int> A = { 1, 2, 3, 4, 5 };
+			std::vector<int> B = { 5, 4, 3, 2, 1 };
+
+			Chamois::Assert::ThatContainer(A).Should().NotBe(B, L"vectors are not equal.");
+		}
+
+		TEST_METHOD(Chamois_Assert_Container_Vector_Empty)
+		{
+			std::vector<int> A = {  };
+
+			Chamois::Assert::ThatContainer(A).Should().BeEmpty(L"vectors empty.");
+		}
+
+		TEST_METHOD(Chamois_Assert_Container_Vector_NotEmpty)
+		{
+			std::vector<int> A = { 1, 2, 3, 4, 5 };
+
+			Chamois::Assert::ThatContainer(A).Should().NotBeEmpty(L"vectors not empty.");
+		}
+
+		TEST_METHOD(Chamois_Assert_Container_Map_Equal)
+		{
+			std::map<int, int> A;
+			std::map<int, int> B;
+
+			for (int i = 0; i < 5; ++i) {
+				A.insert(std::make_pair(i, i));
+				B.insert(std::make_pair(i, i));
+			}
+
+			Chamois::Assert::ThatContainer(A).Should().Be(B, L"map are equal.");
+		}
+
+		TEST_METHOD(Chamois_Assert_Container_Map_NotEqual)
+		{
+			std::map<int, int> A;
+			std::map<int, int> B;
+
+			for (int i = 0; i < 5; ++i) {
+				A.insert(std::make_pair(i, i));
+				B.insert(std::make_pair(5 - i, i));
+			}
+
+			Chamois::Assert::ThatContainer(A).Should().NotBe(B, L"map are not equal.");
+		}
+
+		TEST_METHOD(Chamois_Assert_Container_Map_Empty)
+		{
+			std::map<int, int> A;
+
+			Chamois::Assert::ThatContainer(A).Should().BeEmpty(L"map empty.");
+		}
+
+		TEST_METHOD(Chamois_Assert_Container_Map_NotEmpty)
+		{
+			std::map<int, int> A;
+
+			for (int i = 0; i < 5; ++i) {
+				A.insert(std::make_pair(i, i));
+			}
+
+			Chamois::Assert::ThatContainer(A).Should().NotBeEmpty(L"map not empty.");
+		}
 		/* 
 			Negative tests - These WILL fail
 		*/
@@ -176,5 +264,7 @@ namespace ChamoisTest
 			int B[5] = { 1, 2, 4, 4, 5 };
 			Chamois::Assert::ThatArray(A).Should().Be(B, L"arrays are not equal");
 		}
+
+		
 	};
 }
