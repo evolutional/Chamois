@@ -60,6 +60,18 @@ namespace ChamoisTest
 		}
 
 
+		TEST_METHOD(Chamois_Assert_Equal_char_10)
+		{
+			Chamois::Assert::That((char)10).Should().Be((char)10, L"10 is equal to 10");
+		}
+
+		TEST_METHOD(Chamois_Assert_NotEqual_char_10)
+		{
+			Chamois::Assert::That((char)10).Should().NotBe((char)5, L"10 is not equal to five");
+		}
+
+
+
 		TEST_METHOD(Chamois_Assert_Equal_float_2_4)
 		{		
 			Chamois::Assert::That(2.4f).Should().Be(2.4f, L"2.4 is equal to 2.4");
@@ -156,6 +168,13 @@ namespace ChamoisTest
 			int A[5] = { 1, 2, 3, 4, 5 };
 			int B[5] = { 1, 2, 3, 4, 5 };
 			Chamois::Assert::ThatArray(A).Should().NotBe(B, L"arrays are not equal");
+		}
+
+		TEST_METHOD(Chamois_Assert_NotEqual_Array_Differs_DemonstratingFailure)
+		{
+			int A[5] = { 1, 2, 3, 4, 5 };
+			int B[5] = { 1, 2, 4, 4, 5 };
+			Chamois::Assert::ThatArray(A).Should().Be(B, L"arrays are not equal");
 		}
 	};
 }

@@ -86,7 +86,13 @@ namespace evolutional
 					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected_values_len, actual_values_len, L"Array lengths differ");
 					for (size_t i = 0; i < expected_values_len; ++i)
 					{
-						Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected_values[i], actual_values[i], L"Array contents differ");
+						if (expected_values[i] != actual_values[i])
+						{
+							std::wstring message(L"Array contents differ at index: ");
+							message += std::to_wstring(i);
+							Microsoft::VisualStudio::CppUnitTestFramework::Assert::Fail(message.c_str());
+						}
+						
 					}
 				}
 
@@ -372,6 +378,16 @@ namespace evolutional
 					assert_obj_.AssertFalse(value_, because);
 				}
 
+				void NotBeTrue(const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertFalse(value_, because);
+				}
+
+				void NotBeFalse(const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertTrue(value_, because);
+				}
+
 			private:
 				const bool& value_;
 				AssertInternal &assert_obj_;
@@ -535,11 +551,12 @@ namespace evolutional
 			class ShouldArrImpl
 			{
 			public:
-				ShouldArrImpl(AssertInternal &assert_obj, const T (&value)[N]) : 
+				
+				ShouldArrImpl(AssertInternal &assert_obj, const T(&value)[N]) :
 					value_(value),
 					assert_obj_(assert_obj),
 					length_(N)
-				{				
+				{
 				}
 
 				template<int O>
@@ -553,9 +570,19 @@ namespace evolutional
 				{
 					assert_obj_.AssertArrayNotEqual<T>(expected_value, O, value_, length_, because);
 				}
+				
+				void HaveLength(size_t expected_length, const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertEqual(expected_length, length_, because);
+				}
+
+				void NotHaveLength(size_t expected_length, const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertNotEqual(expected_length, length_, because);
+				}			
 
 			private:
-				const int length_;
+				const size_t length_;
 				const T (&value_)[N];
 				AssertInternal &assert_obj_;
 			};			
@@ -599,6 +626,16 @@ namespace evolutional
 			}
 
 			/* Numeric */
+			static detail::ThatNumImpl<char> That(const char value)
+			{
+				return detail::ThatNumImpl<char>(TAssertImpl(), value);
+			}
+
+			static detail::ThatNumImpl<unsigned char> That(const unsigned char value)
+			{
+				return detail::ThatNumImpl<unsigned char>(TAssertImpl(), value);
+			}
+
 			static detail::ThatNumImpl<short> That(const short value)
 			{
 				return detail::ThatNumImpl<short>(TAssertImpl(), value);

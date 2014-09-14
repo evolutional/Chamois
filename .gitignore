@@ -3,6 +3,8 @@
 *.o.d
 *.class
 *.a
+*.opensdf
+*.sdf
 *~
 **/bin/**
 **/gen/**
