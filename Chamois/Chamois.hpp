@@ -26,7 +26,7 @@ namespace evolutional
 		namespace detail
 		{
 
-	#ifdef MS_CPP_UNITTESTFRAMEWORK
+#ifdef MS_CPP_UNITTESTFRAMEWORK
 			/* Assertions using MSVC CppUnitTestFramework */
 			class MsAssertInternal
 			{
@@ -92,7 +92,7 @@ namespace evolutional
 							message += std::to_wstring(i);
 							Microsoft::VisualStudio::CppUnitTestFramework::Assert::Fail(message.c_str());
 						}
-						
+
 					}
 				}
 
@@ -112,7 +112,7 @@ namespace evolutional
 					const T* lhs = expected_lhs ? expected_values : actual_values;
 					const T* rhs = !expected_lhs ? expected_values : actual_values;
 
-					for(size_t i = 0; i < min_len; ++i)
+					for (size_t i = 0; i < min_len; ++i)
 					{
 						if (lhs[i] != rhs[i])
 						{
@@ -143,7 +143,7 @@ namespace evolutional
 				{
 					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(expected_value, actual_value, because);
 				}
-	
+
 
 				void AssertStringLength(const size_t expected_length, const std::wstring &actual_string, const wchar_t *because)
 				{
@@ -195,8 +195,11 @@ namespace evolutional
 					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_string.substr(0, expected_prefix.length()) == expected_prefix, because);
 				}
 
+				void AssertFail(const wchar_t *because) {
+					Microsoft::VisualStudio::CppUnitTestFramework::Assert::Fail(because);
+				}
 			};
-	#endif // MS_CPP_UNITTESTFRAMEWORK
+#endif // MS_CPP_UNITTESTFRAMEWORK
 
 
 #ifdef MS_CPP_UNITTESTFRAMEWORK
@@ -212,7 +215,7 @@ namespace evolutional
 			class ShouldImpl
 			{
 			public:
-				ShouldImpl(AssertInternal &assert_obj, const T& value) : 
+				ShouldImpl(AssertInternal &assert_obj, const T& value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -237,7 +240,7 @@ namespace evolutional
 			class ThatImpl
 			{
 			public:
-				ThatImpl(AssertInternal &assert_obj, const T& value) : 
+				ThatImpl(AssertInternal &assert_obj, const T& value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -259,7 +262,7 @@ namespace evolutional
 			class ShouldNumImpl
 			{
 			public:
-				ShouldNumImpl(AssertInternal &assert_obj, const T value) : 
+				ShouldNumImpl(AssertInternal &assert_obj, const T value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -333,7 +336,7 @@ namespace evolutional
 			class ThatNumImpl
 			{
 			public:
-				ThatNumImpl(AssertInternal &assert_obj, const T value) : 
+				ThatNumImpl(AssertInternal &assert_obj, const T value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -346,14 +349,14 @@ namespace evolutional
 				const T value_;
 				AssertInternal &assert_obj_;
 			};
-		
+
 
 
 			/* Boolean */
 			class ShouldBoolImpl
 			{
 			public:
-				ShouldBoolImpl(AssertInternal &assert_obj, const bool& value) : 
+				ShouldBoolImpl(AssertInternal &assert_obj, const bool& value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -396,7 +399,7 @@ namespace evolutional
 			class ThatBoolImpl
 			{
 			public:
-				ThatBoolImpl(AssertInternal &assert_obj, const bool& value) : 
+				ThatBoolImpl(AssertInternal &assert_obj, const bool& value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -415,7 +418,7 @@ namespace evolutional
 			class ShouldStrImpl
 			{
 			public:
-				ShouldStrImpl(AssertInternal &assert_obj, const T &value) : 
+				ShouldStrImpl(AssertInternal &assert_obj, const T &value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -449,7 +452,7 @@ namespace evolutional
 				{
 					assert_obj_.AssertNotStringEmpty(value_, because);
 				}
-				
+
 				void StartWith(const T &expected_prefix, const wchar_t *because = '\0')
 				{
 					assert_obj_.AssertStringStartsWith(expected_prefix, value_, because);
@@ -474,7 +477,7 @@ namespace evolutional
 			class ThatStrImpl
 			{
 			public:
-				ThatStrImpl(AssertInternal &assert_obj, const T &value) : 
+				ThatStrImpl(AssertInternal &assert_obj, const T &value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -492,7 +495,7 @@ namespace evolutional
 			class ShouldPtrImpl
 			{
 			public:
-				ShouldPtrImpl(AssertInternal &assert_obj, const T * value) : 
+				ShouldPtrImpl(AssertInternal &assert_obj, const T * value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -526,7 +529,7 @@ namespace evolutional
 			class ThatPtrImpl
 			{
 			public:
-				ThatPtrImpl(AssertInternal &assert_obj, const T * value) : 
+				ThatPtrImpl(AssertInternal &assert_obj, const T * value) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{}
@@ -538,20 +541,20 @@ namespace evolutional
 				AssertInternal &assert_obj_;
 			};
 
-			
-
-			
-
-		
 
 
-		
+
+
+
+
+
+
 			/* Array */
 			template<typename T, int N>
 			class ShouldArrImpl
 			{
 			public:
-				
+
 				ShouldArrImpl(AssertInternal &assert_obj, const T(&value)[N]) :
 					value_(value),
 					assert_obj_(assert_obj),
@@ -560,17 +563,17 @@ namespace evolutional
 				}
 
 				template<int O>
-				void Be(const T (&expected_value)[O], const wchar_t *because = '\0')
+				void Be(const T(&expected_value)[O], const wchar_t *because = '\0')
 				{
 					assert_obj_.AssertArrayEqual(expected_value, O, value_, length_, because);
 				}
 
 				template<int O>
-				void NotBe(const T (&expected_value)[O], const wchar_t *because = '\0')
+				void NotBe(const T(&expected_value)[O], const wchar_t *because = '\0')
 				{
 					assert_obj_.AssertArrayNotEqual<T>(expected_value, O, value_, length_, because);
 				}
-				
+
 				void HaveLength(size_t expected_length, const wchar_t *because = '\0')
 				{
 					assert_obj_.AssertEqual(expected_length, length_, because);
@@ -579,19 +582,19 @@ namespace evolutional
 				void NotHaveLength(size_t expected_length, const wchar_t *because = '\0')
 				{
 					assert_obj_.AssertNotEqual(expected_length, length_, because);
-				}			
+				}
 
 			private:
 				const size_t length_;
-				const T (&value_)[N];
+				const T(&value_)[N];
 				AssertInternal &assert_obj_;
-			};			
-		
+			};
+
 			template<typename T, int N>
 			class ThatArrImpl
 			{
 			public:
-				ThatArrImpl(AssertInternal &assert_obj, const T (&value)[N]) : 
+				ThatArrImpl(AssertInternal &assert_obj, const T(&value)[N]) :
 					value_(value),
 					assert_obj_(assert_obj)
 				{
@@ -604,8 +607,76 @@ namespace evolutional
 				ShouldArrImpl<T, N> Should() { return ShouldArrImpl<T, N>(assert_obj_, value_); }
 
 			protected:
-				const T (&value_)[N];
+				const T(&value_)[N];
 				size_t length_;
+				AssertInternal &assert_obj_;
+			};
+
+			template<typename Container>
+			class ShouldContainerImpl {
+			public:
+				typedef typename Container::value_type value_type;
+				typedef typename Container::iterator iterator;
+
+				ShouldContainerImpl(AssertInternal &assert_obj, Container const& c) : assert_obj_(assert_obj), container_(c) {}
+
+				void Be(Container const& other, const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertEqual(other.size(), container_.size(), because);
+					for (auto actual = container_.begin(), expected = other.begin(); actual != container_.end(); ++actual, ++expected)
+					{
+						assert_obj_.AssertEqual(*expected, *actual, because);
+					}
+				}
+
+				void NotBe(Container const& other, const wchar_t *because = '\0')
+				{
+					if (other.size() != container_.size())
+						return;
+
+					for (auto actual = container_.begin(), expected = other.begin(); actual != container_.end() && expected != other.end(); ++actual, ++expected) 
+					{
+						if (*actual != *expected)
+						{
+							return;
+						}
+					}
+
+					assert_obj_.AssertFail(because);
+				}
+
+				void HaveLength(const size_t expected_length, const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertEqual(expected_length, container_.size(), because);
+				}
+
+				void NotHaveLength(const size_t expected_length, const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertNotEqual(expected_length, container_.size(), because);
+				}
+
+				void BeEmpty(const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertTrue(container_.empty(), because);
+				}
+
+				void NotBeEmpty(const wchar_t *because = '\0')
+				{
+					assert_obj_.AssertFalse(container_.empty(), because);
+				}
+			private:
+				Container const& container_;
+				AssertInternal &assert_obj_;
+			};
+
+			template<typename Container>
+			class ThatContainerImpl {
+			public:
+				ThatContainerImpl(AssertInternal &assert_obj, Container const& c) : assert_obj_(assert_obj), container_(c) {}
+
+				ShouldContainerImpl<Container> Should() { return ShouldContainerImpl<Container>(assert_obj_, container_); }
+			private:
+				Container const& container_;
 				AssertInternal &assert_obj_;
 			};
 
@@ -718,6 +789,10 @@ namespace evolutional
 				return detail::ThatPtrImpl<T>(TAssertImpl(), value);
 			}
 
+			template<typename T>
+			static detail::ThatContainerImpl<T> ThatContainer(T const& container) {
+				return detail::ThatContainerImpl<T>(TAssertImpl(), container);
+			}
 			/* Char Array */
 			/*
 			template<int N>
