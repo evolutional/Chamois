@@ -768,7 +768,7 @@ namespace evolutional
 
 			static detail::ThatStrImpl<std::string> That(const std::string & value)
 			{
-				return detail::ThatPtrImpl<std::string>(TAssertImpl(), value);
+				return detail::ThatStrImpl<std::string>(TAssertImpl(), value);
 			}
 
 			static detail::ThatStrImpl<std::wstring> That(const wchar_t * value)
