@@ -25,72 +25,103 @@ namespace evolutional
 	{
 		namespace detail
 		{
-
 #ifdef MS_CPP_UNITTESTFRAMEWORK
-			/* Assertions using MSVC CppUnitTestFramework */
-			class MsAssertInternal
+			class MsAssert
 			{
 			public:
 				template<typename T>
-				void AssertEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
+				static void Equal(const T &expected_value, const T &actual_value, const wchar_t *because)
 				{
 					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected_value, actual_value, because);
 				}
 
 				template<typename T>
-				void AssertNotEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
+				static void NotEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
 				{
 					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(expected_value, actual_value, because);
+				}
+
+				static void True(const bool &actual_value, const wchar_t *because)
+				{
+					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_value, because);
+				}
+
+				static void False(const bool &actual_value, const wchar_t *because)
+				{
+					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsFalse(actual_value, because);
+				}
+
+				static void Fail(const wchar_t *because)
+				{
+					Microsoft::VisualStudio::CppUnitTestFramework::Assert::Fail(because);
+				}
+			};
+#endif
+
+			template<class TAssert>
+			class TAssertInternal
+			{
+			public:
+				template<typename T>
+				void AssertEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
+				{
+					TAssert::Equal(expected_value, actual_value, because);
+				}
+
+				template<typename T>
+				void AssertNotEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
+				{
+					TAssert::NotEqual(expected_value, actual_value, because);
 				}
 
 				template<typename T>
 				void AssertGreater(const T &expected_value, const T &actual_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_value > expected_value, because);
+					TAssert::True(actual_value > expected_value, because);
 				}
 
 				template<typename T>
 				void AssertLess(const T &expected_value, const T &actual_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_value < expected_value, because);
+					TAssert::True(actual_value < expected_value, because);
 				}
 
 				template<typename T>
 				void AssertGreaterEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_value >= expected_value, because);
+					TAssert::True(actual_value >= expected_value, because);
 				}
 
 				template<typename T>
 				void AssertLessEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_value <= expected_value, because);
+					TAssert::True(actual_value <= expected_value, because);
 				}
 
 				template<typename T>
 				void AssertInRange(const T &actual_value, const T &min_value, const T &max_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_value >= min_value, because);
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_value <= max_value, because);
+					TAssert::True(actual_value >= min_value, because);
+					TAssert::True(actual_value <= max_value, because);
 				}
 
 				template<typename T>
 				void AssertNotInRange(const T &actual_value, const T &min_value, const T &max_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsFalse(actual_value >= min_value && actual_value <= max_value, because);
+					TAssert::False(actual_value >= min_value && actual_value <= max_value, because);
 				}
 
 				template<typename T>
 				void AssertArrayEqual(const T *expected_values, const size_t expected_values_len, const T *actual_values, const size_t actual_values_len, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected_values_len, actual_values_len, L"Array lengths differ");
+					TAssert::Equal(expected_values_len, actual_values_len, L"Array lengths differ");
 					for (size_t i = 0; i < expected_values_len; ++i)
 					{
 						if (expected_values[i] != actual_values[i])
 						{
 							std::wstring message(L"Array contents differ at index: ");
 							message += std::to_wstring(i);
-							Microsoft::VisualStudio::CppUnitTestFramework::Assert::Fail(message.c_str());
+							TAssert::Fail(message.c_str());
 						}
 
 					}
@@ -119,91 +150,91 @@ namespace evolutional
 							return;
 						}
 					}
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::Fail(L"Array contents the same");
+					TAssert::Fail(L"Array contents the same");
 				}
 
 				void AssertTrue(const bool &actual_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_value, because);
+					TAssert::True(actual_value, because);
 				}
 
 				void AssertFalse(const bool &actual_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsFalse(actual_value, because);
+					TAssert::False(actual_value, because);
 				}
 
 				template<typename T>
 				void AssertEqual(const T* expected_value, const T* actual_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected_value, actual_value, because);
+					TAssert::Equal(expected_value, actual_value, because);
 				}
 
 				template<typename T>
 				void AssertNotEqual(const T* expected_value, const T* actual_value, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(expected_value, actual_value, because);
+					TAssert::NotEqual(expected_value, actual_value, because);
 				}
 
 
 				void AssertStringLength(const size_t expected_length, const std::wstring &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected_length, actual_string.length(), because);
+					TAssert::Equal(expected_length, actual_string.length(), because);
 				}
 
 				void AssertNotStringLength(const size_t expected_length, const std::wstring &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(expected_length, actual_string.length(), because);
+					TAssert::NotEqual(expected_length, actual_string.length(), because);
 				}
 
 				void AssertStringEmpty(const std::wstring &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(size_t(0), actual_string.length(), because);
+					TAssert::Equal(size_t(0), actual_string.length(), because);
 				}
 
 				void AssertNotStringEmpty(const std::wstring &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(size_t(0), actual_string.length(), because);
+					TAssert::NotEqual(size_t(0), actual_string.length(), because);
 				}
 
 				void AssertStringStartsWith(const std::wstring &expected_prefix, const std::wstring &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_string.substr(0, expected_prefix.length()) == expected_prefix, because);
+					TAssert::True(actual_string.substr(0, expected_prefix.length()) == expected_prefix, because);
 				}
 
 				void AssertStringLength(const size_t expected_length, const std::string &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected_length, actual_string.length(), because);
+					TAssert::Equal(expected_length, actual_string.length(), because);
 				}
 
 				void AssertNotStringLength(const size_t expected_length, const std::string &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(expected_length, actual_string.length(), because);
+					TAssert::NotEqual(expected_length, actual_string.length(), because);
 				}
 
 				void AssertStringEmpty(const std::string &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(size_t(0), actual_string.length(), because);
+					TAssert::Equal(size_t(0), actual_string.length(), because);
 				}
 
 				void AssertNotStringEmpty(const std::string &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(size_t(0), actual_string.length(), because);
+					TAssert::NotEqual(size_t(0), actual_string.length(), because);
 				}
 
 				void AssertStringStartsWith(const std::string &expected_prefix, const std::string &actual_string, const wchar_t *because)
 				{
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue(actual_string.substr(0, expected_prefix.length()) == expected_prefix, because);
+					TAssert::True(actual_string.substr(0, expected_prefix.length()) == expected_prefix, because);
 				}
 
-				void AssertFail(const wchar_t *because) {
-					Microsoft::VisualStudio::CppUnitTestFramework::Assert::Fail(because);
+				void AssertFail(const wchar_t *because) 
+				{
+					TAssert::Fail(because);
 				}
 			};
-#endif // MS_CPP_UNITTESTFRAMEWORK
 
 
 #ifdef MS_CPP_UNITTESTFRAMEWORK
-			typedef MsAssertInternal AssertInternal;
+			typedef TAssertInternal<MsAssert> AssertInternal;
 #else
 #error No supported test framework found
 #endif
@@ -363,12 +394,12 @@ namespace evolutional
 
 				void Be(const bool&expected_value, const wchar_t *because = '\0')
 				{
-					assert_obj_.AssertEqual<bool>(expected_value, value_, because);
+					assert_obj_.AssertEqual(expected_value, value_, because);
 				}
 
 				void NotBe(const bool&expected_value, const wchar_t *because = '\0')
 				{
-					assert_obj_.AssertNotEqual<bool>(expected_value, value_, because);
+					assert_obj_.AssertNotEqual(expected_value, value_, because);
 				}
 
 				void BeTrue(const wchar_t *because = '\0')
