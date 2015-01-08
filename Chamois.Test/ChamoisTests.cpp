@@ -243,7 +243,7 @@ namespace ChamoisTest
 		/* 
 			Negative tests - These WILL fail
 		*/
-
+#ifdef CHAMOIS_TEST_ENABLE_FAILING_TESTS
 		TEST_METHOD(Chamois_Assert_NotEqual_Strings_DemonstratingFailure)
 		{		
 			const wchar_t *A = L"hello";
@@ -264,7 +264,7 @@ namespace ChamoisTest
 			int B[5] = { 1, 2, 4, 4, 5 };
 			Chamois::Assert::ThatArray(A).Should().Be(B, L"arrays are not equal");
 		}
-
+#endif
 		
 	};
 }

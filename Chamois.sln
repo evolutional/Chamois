@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chamois.Test", "Chamois.Test\Chamois.Test.vcxproj", "{6BF4918B-A7BB-475E-AC3E-4CC61396CC77}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chamois.GTest", "Chamois.GTest\Chamois.GTest.vcxproj", "{A8BA6CC0-E8AF-4A70-97CD-743D474C2008}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{6BF4918B-A7BB-475E-AC3E-4CC61396CC77}.Debug|Win32.Build.0 = Debug|Win32
 		{6BF4918B-A7BB-475E-AC3E-4CC61396CC77}.Release|Win32.ActiveCfg = Release|Win32
 		{6BF4918B-A7BB-475E-AC3E-4CC61396CC77}.Release|Win32.Build.0 = Release|Win32
+		{A8BA6CC0-E8AF-4A70-97CD-743D474C2008}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A8BA6CC0-E8AF-4A70-97CD-743D474C2008}.Debug|Win32.Build.0 = Debug|Win32
+		{A8BA6CC0-E8AF-4A70-97CD-743D474C2008}.Release|Win32.ActiveCfg = Release|Win32
+		{A8BA6CC0-E8AF-4A70-97CD-743D474C2008}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -58,6 +58,39 @@ namespace evolutional
 			};
 #endif
 
+#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+			class GTestAssert
+			{
+			public:
+				template<typename T>
+				static void Equal(const T &expected_value, const T &actual_value, const wchar_t *because)
+				{
+					ASSERT_EQ(expected_value, actual_value) << because;
+				}
+
+				template<typename T>
+				static void NotEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
+				{
+					ASSERT_NE(expected_value, actual_value) << because;
+				}
+
+				static void True(const bool &actual_value, const wchar_t *because)
+				{
+					ASSERT_TRUE(actual_value) << because;
+				}
+
+				static void False(const bool &actual_value, const wchar_t *because)
+				{
+					ASSERT_FALSE(actual_value) << because;
+				}
+
+				static void Fail(const wchar_t *because)
+				{
+					ASSERT_TRUE(false) << because;
+				}
+			};
+#endif
+
 			template<class TAssert>
 			class TAssertInternal
 			{
@@ -235,8 +268,12 @@ namespace evolutional
 
 #ifdef MS_CPP_UNITTESTFRAMEWORK
 			typedef TAssertInternal<MsAssert> AssertInternal;
-#else
-#error No supported test framework found
+#else 
+#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+			typedef TAssertInternal<GTestAssert> AssertInternal;
+	#else
+	#error No supported test framework found
+	#endif
 #endif
 
 
