@@ -61,7 +61,7 @@ Support for more standard library containers, smart pointers, etc is planned.
 Supported Test Frameworks
 ---
 
-At this time, only Microsoft's C++ Unit Test Framework is supported. Adding additional frameworks, such as the Boost Test Library is a future goal for this project.
+Currently Microsoft's C++ Unit Test Framework and Google Test is supported. Adding additional frameworks, such as the Boost Test Library is a future goal for this project.
 
 
 BDD
