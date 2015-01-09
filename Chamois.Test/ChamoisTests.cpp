@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
+#include "Chamois.hpp"
 
 #include <vector>
 #include <map>

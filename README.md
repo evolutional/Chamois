@@ -61,7 +61,26 @@ Support for more standard library containers, smart pointers, etc is planned.
 Supported Test Frameworks
 ---
 
-Currently Microsoft's C++ Unit Test Framework and Google Test is supported. Adding additional frameworks, such as the Boost Test Library is a future goal for this project.
+* Microsoft's C++ Unit Test Framework
+* Google Test (GTest)
+* Boost Unit Test Framework (UTF)
+* Others may be added in the future
+
+Usage
+---
+
+In the majority of cases, you include your test framework header first and then Chamois.hpp. Generally, you should ensure that your types are comparable (== and !=)
+
+**Microsoft C++ Unit Test**
+
+Occasionally, you may get compilation errors in your tests; more often than not this is due to the MS framework not knowing how to compare two values; this is due to the framework converting your type to a string for comparisions.
+ To achieve this, you must provide a template specialization for the Microsoft::VisualStudio::CppUnitTestFramework::ToString method. 
+
+**Boost Unit Test Framework**
+
+Ensure that you have included the unit_test.hpp file and defined BOOST_TEST_MODULE before including the Chamois.hpp header.
+
+There are a few limitations in the Boost framework support at present. As a result, the Asserts fall back to a simple BOOST_CHECK( a == b ) and we lose the ability to see the expected and actual values.
 
 
 BDD

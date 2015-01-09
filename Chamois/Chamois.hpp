@@ -16,8 +16,44 @@
  *		limitations under the License.
  */
 
-#include <string>
 #include <algorithm>
+#include <codecvt>
+#include <locale>
+#include <string>
+
+
+#ifdef CHAMOIS_UNITTEST_FRAMEWORK
+#undef CHAMOIS_UNITTEST_FRAMEWORK
+#endif
+
+#define CHAMOIS_UNITTEST_FRAMEWORK_MS		1
+#define CHAMOIS_UNITTEST_FRAMEWORK_GTEST	2
+#define CHAMOIS_UNITTEST_FRAMEWORK_BOOST	3
+
+#ifdef MS_CPP_UNITTESTFRAMEWORK
+	#ifdef CHAMOIS_UNITTEST_FRAMEWORK
+		#error Multiple test frameworks found
+	#endif
+	#define CHAMOIS_UNITTEST_FRAMEWORK CHAMOIS_UNITTEST_FRAMEWORK_MS
+#endif
+
+#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+		#ifdef CHAMOIS_UNITTEST_FRAMEWORK
+	#error Multiple test frameworks found
+	#endif
+	#define CHAMOIS_UNITTEST_FRAMEWORK CHAMOIS_UNITTEST_FRAMEWORK_GTEST
+#endif
+
+#ifdef BOOST_TEST_MODULE
+	#ifdef CHAMOIS_UNITTEST_FRAMEWORK
+		#error Multiple test frameworks found
+	#endif
+	#define CHAMOIS_UNITTEST_FRAMEWORK CHAMOIS_UNITTEST_FRAMEWORK_BOOST
+#endif
+
+#ifndef CHAMOIS_UNITTEST_FRAMEWORK
+	#error No supported test framework found
+#endif
 
 namespace evolutional
 {
@@ -25,7 +61,7 @@ namespace evolutional
 	{
 		namespace detail
 		{
-#ifdef MS_CPP_UNITTESTFRAMEWORK
+#if CHAMOIS_UNITTEST_FRAMEWORK == CHAMOIS_UNITTEST_FRAMEWORK_MS
 			class MsAssert
 			{
 			public:
@@ -58,7 +94,7 @@ namespace evolutional
 			};
 #endif
 
-#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+#if CHAMOIS_UNITTEST_FRAMEWORK == CHAMOIS_UNITTEST_FRAMEWORK_GTEST
 			class GTestAssert
 			{
 			public:
@@ -87,6 +123,67 @@ namespace evolutional
 				static void Fail(const wchar_t *because)
 				{
 					ASSERT_TRUE(false) << because;
+				}
+			};
+#endif
+
+#if CHAMOIS_UNITTEST_FRAMEWORK == CHAMOIS_UNITTEST_FRAMEWORK_BOOST
+			class BoostTestAssert
+			{
+			public:
+				template<typename T>
+				static void Equal(const T &expected_value, const T &actual_value, const wchar_t *because)
+				{
+					BOOST_REQUIRE(expected_value == actual_value);
+				}
+
+				static void Equal(const wchar_t *expected_value, const wchar_t *actual_value, const wchar_t *because)
+				{
+					std::wstring e(expected_value);
+					std::wstring a(actual_value);
+					Equal(e, a, because);
+				}
+
+				template<>
+				static void Equal(const float &expected_value, const float &actual_value, const wchar_t *because)
+				{
+					BOOST_REQUIRE_CLOSE(expected_value, actual_value, 0.0001);
+				}
+
+				template<>
+				static void Equal(const double &expected_value, const double &actual_value, const wchar_t *because)
+				{
+					BOOST_REQUIRE_CLOSE(expected_value, actual_value, 0.0001);
+				}
+
+				template<typename T>
+				static void NotEqual(const T &expected_value, const T &actual_value, const wchar_t *because)
+				{
+					BOOST_REQUIRE(expected_value != actual_value);
+				}
+
+				static void NotEqual(const wchar_t *expected_value, const wchar_t *actual_value, const wchar_t *because)
+				{
+					std::wstring e(expected_value);
+					std::wstring a(actual_value);
+					NotEqual(e, a, because);
+				}
+
+				static void True(const bool &actual_value, const wchar_t *because)
+				{
+					BOOST_REQUIRE(actual_value);
+				}
+
+				static void False(const bool &actual_value, const wchar_t *because)
+				{
+					BOOST_REQUIRE(!actual_value);
+				}
+
+				static void Fail(const wchar_t *because)
+				{
+					std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cvt;
+					std::string str = cvt.to_bytes(std::wstring(because));
+					BOOST_FAIL(str.c_str());
 				}
 			};
 #endif
@@ -166,7 +263,7 @@ namespace evolutional
 					if (expected_values_len != actual_values_len)
 						return;
 
-					auto min_len = std::min(actual_values_len, expected_values_len);
+					auto min_len = (std::min)(actual_values_len, expected_values_len);
 					bool expected_lhs = false;
 					if (expected_values_len < actual_values_len)
 					{
@@ -266,14 +363,14 @@ namespace evolutional
 			};
 
 
-#ifdef MS_CPP_UNITTESTFRAMEWORK
+#if CHAMOIS_UNITTEST_FRAMEWORK == CHAMOIS_UNITTEST_FRAMEWORK_MS
 			typedef TAssertInternal<MsAssert> AssertInternal;
-#else 
-#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+#elif CHAMOIS_UNITTEST_FRAMEWORK == CHAMOIS_UNITTEST_FRAMEWORK_GTEST
 			typedef TAssertInternal<GTestAssert> AssertInternal;
-	#else
+#elif CHAMOIS_UNITTEST_FRAMEWORK == CHAMOIS_UNITTEST_FRAMEWORK_BOOST
+			typedef TAssertInternal<BoostTestAssert> AssertInternal;
+#else
 	#error No supported test framework found
-	#endif
 #endif
 
 
